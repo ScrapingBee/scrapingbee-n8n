@@ -1,0 +1,54 @@
+{
+	"name": "n8n-nodes-scrapingbee",
+	"version": "0.1.0",
+	"description": "n8n node to call ScrapingBee API services.",
+	"keywords": [
+		"n8n-community-node-package"
+	],
+	"license": "MIT",
+	"homepage": "https://www.scrapingbee.com/",
+	"author": {
+		"name": "ScrapingBee",
+		"email": "contact@scrapingbee.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ScrapingBee/scrapingbee-n8n.git"
+	},
+	"engines": {
+		"node": ">=20.15"
+	},
+	"main": "index.js",
+	"scripts": {
+		"build": "npx rimraf dist && tsc && gulp build:icons",
+		"dev": "tsc --watch",
+		"format": "prettier nodes credentials --write",
+		"lint": "eslint nodes credentials package.json",
+		"lintfix": "eslint nodes credentials package.json --fix",
+		"prepublishOnly": "npm run build && npm run lint -c .eslintrc.prepublish.js nodes credentials package.json"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"credentials": [
+			"dist/credentials/ScrapingBee.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/ScrapingBee/ScrapingBee.node.js"
+		]
+	},
+	"devDependencies": {
+		"@types/node": "^24.0.13",
+		"@typescript-eslint/parser": "~8.32.0",
+		"eslint": "^8.57.0",
+		"eslint-plugin-n8n-nodes-base": "^1.16.3",
+		"gulp": "^5.0.0",
+		"prettier": "^3.5.3",
+		"typescript": "^5.8.3"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}
