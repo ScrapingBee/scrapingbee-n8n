@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-scrapingbee",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "n8n node to call ScrapingBee API services.",
 	"keywords": [
 		"n8n-community-node-package"
@@ -33,7 +33,7 @@
 	"n8n": {
 		"n8nNodesApiVersion": 1,
 		"credentials": [
-			"dist/credentials/ScrapingBee.credentials.js"
+			"dist/credentials/ScrapingBeeApi.credentials.js"
 		],
 		"nodes": [
 			"dist/nodes/ScrapingBee/ScrapingBee.node.js"
