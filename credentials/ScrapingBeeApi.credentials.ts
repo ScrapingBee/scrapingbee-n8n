@@ -1,4 +1,4 @@
-import { IAuthenticateGeneric, ICredentialType, INodeProperties } from 'n8n-workflow';
+import { IAuthenticateGeneric, ICredentialType, INodeProperties, ICredentialTestRequest } from 'n8n-workflow';
 
 export class ScrapingBeeApi implements ICredentialType {
 	// eslint-disable-next-line n8n-nodes-base/cred-class-field-name-uppercase-first-char
@@ -23,5 +23,14 @@ export class ScrapingBeeApi implements ICredentialType {
 				api_key: '={{$credentials.apiKey}}',
 			},
 		},
-	}
+	};
+
+	test: ICredentialTestRequest = {
+		request: {
+			baseURL: 'https://app.scrapingbee.com/api/v1/',
+			url: 'usage',
+		},
+	};
+
+
 }
