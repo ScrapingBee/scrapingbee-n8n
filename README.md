@@ -44,6 +44,7 @@ n8n 1.101.2 and above
 
 ## Version history
 
+- 0.1.1: Minor bug fix
 - 0.1.0: Initial Release
 
 
