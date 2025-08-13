@@ -7,7 +7,7 @@ import {
 	NodeConnectionType,
 	INodeInputConfiguration,
 	INodeOutputConfiguration,
-	IRequestOptions
+	IHttpRequestOptions
 } from 'n8n-workflow';
 
 export class ScrapingBee implements INodeType {
@@ -220,6 +220,131 @@ export class ScrapingBee implements INodeType {
 						resource: ['htmlAPI'],
 					},
 				},
+			},
+			{
+					displayName: 'Send Body',
+					name: 'sendBody',
+					type: 'boolean',
+					default: false,
+					description: 'Whether to send a body with the request',
+					displayOptions: {
+							show: {
+									resource: ['htmlAPI'],
+									operation: ['post', 'put'],
+							},
+					},
+			},
+			{
+					displayName: 'Body Content Type',
+					name: 'bodyContentType',
+					type: 'options',
+					options: [
+							{
+									name: 'Form Urlencoded',
+									value: 'formUrlencoded',
+							},
+							{
+									name: 'JSON',
+									value: 'json',
+							},
+							{
+									name: 'Raw',
+									value: 'raw',
+							},
+					],
+					default: 'formUrlencoded',
+					description: 'Content-Type to use to send body data',
+					displayOptions: {
+							show: {
+									sendBody: [true],
+									resource: ['htmlAPI'],
+									operation: ['post', 'put'],
+							},
+					},
+			},
+			{
+					displayName: 'Body',
+					name: 'bodyParameters',
+					type: 'fixedCollection',
+					typeOptions: {
+							multipleValues: true,
+					},
+					placeholder: 'Add Parameter',
+					default: {},
+					displayOptions: {
+							show: {
+									bodyContentType: ['formUrlencoded'],
+									sendBody: [true],
+									resource: ['htmlAPI'],
+									operation: ['post', 'put'],
+							},
+					},
+					options: [
+							{
+									name: 'parameter',
+									displayName: 'Parameter',
+									values: [
+											{
+													displayName: 'Name',
+													name: 'name',
+													type: 'string',
+													default: '',
+											},
+											{
+													displayName: 'Value',
+													name: 'value',
+													type: 'string',
+													default: '',
+											},
+									],
+							},
+					],
+			},
+			{
+					displayName: 'Body',
+					name: 'jsonBodyParameter',
+					type: 'json',
+					default: '',
+					displayOptions: {
+							show: {
+									bodyContentType: ['json'],
+									sendBody: [true],
+									resource: ['htmlAPI'],
+									operation: ['post', 'put'],
+							},
+					},
+			},
+			{
+					displayName: 'Body',
+					name: 'rawBodyParameter',
+					type: 'string',
+					typeOptions: {
+							alwaysOpenEditWindow: true,
+					},
+					default: '',
+					displayOptions: {
+							show: {
+									bodyContentType: ['raw'],
+									sendBody: [true],
+									resource: ['htmlAPI'],
+									operation: ['post', 'put'],
+							},
+					},
+			},
+			{
+					displayName: 'Content-Type',
+					name: 'rawContentType',
+					type: 'string',
+					default: 'text/plain',
+					description: 'The Content-Type of the raw body',
+					displayOptions: {
+							show: {
+									bodyContentType: ['raw'],
+									sendBody: [true],
+									resource: ['htmlAPI'],
+									operation: ['post', 'put'],
+							},
+					},
 			},
 			{
 				displayName: 'Search',
@@ -568,40 +693,42 @@ export class ScrapingBee implements INodeType {
 		for (let i = 0; i < items.length; i++) {
 			try {
 				const resource = this.getNodeParameter('resource', i) as string;
-				const credentials = await this.getCredentials('ScrapingBeeApi');
-				const apiKey = credentials.apiKey as string;
 
-				const qs: { [key: string]: any } = { api_key: apiKey };
-				const headers: { [key: string]: string } = {};
-				let body = {};
+				const headers: { [key: string]: string } = { 'User-Agent': 'n8n' };
 				let endpoint = '';
 				let requestMethod: 'GET' | 'POST' | 'PUT' = 'GET';
 
-				const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
-				Object.keys(additionalFields).forEach(key => {
-					const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-					if (additionalFields[key] !== '' && additionalFields[key] !== undefined && additionalFields[key] !== null) {
-						qs[snakeKey] = additionalFields[key];
-					}
-				});
-
-				const requestOptions: IRequestOptions = {
-					qs,
+				const requestOptions: IHttpRequestOptions = {
+					url: '',
+					method: 'GET',
 					headers,
-					body,
-					json: false,
-					resolveWithFullResponse: true,
-					encoding: 'utf8',
+					returnFullResponse: true,
+					encoding: 'arraybuffer', // Always expect a buffer for any content type
+					json: false, // We will handle the body manually
 				};
 
+				// All parameters for the ScrapingBee URL will be built here
+				const scrapingBeeUrlParams: { [key: string]: any } = {};
+
 				if (resource === 'htmlAPI') {
-					requestMethod = (this.getNodeParameter('operation', i) as string).toUpperCase() as 'GET' | 'POST' | 'PUT';
 					endpoint = 'https://app.scrapingbee.com/api/v1/';
-					qs.url = this.getNodeParameter('url', i) as string;
+					requestMethod = (this.getNodeParameter('operation', i) as string).toUpperCase() as 'GET' | 'POST' | 'PUT';
+
+					// Add base URL parameter
+					scrapingBeeUrlParams.url = this.getNodeParameter('url', i) as string;
+
+					// Add all Additional Fields (like 'screenshot') to the URL parameters
+					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
+					Object.keys(additionalFields).forEach(key => {
+						const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+						if (additionalFields[key] !== '' && additionalFields[key] !== undefined && additionalFields[key] !== null) {
+							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
+						}
+					});
 
 					const forwardHeaders = this.getNodeParameter('forwardHeaders', i, false) as boolean;
 					if (forwardHeaders) {
-						qs.forward_headers = forwardHeaders;
+						scrapingBeeUrlParams.forward_headers = true;
 						const specifyHeaders = this.getNodeParameter('specifyHeaders', i, 'keypair') as string;
 						if (specifyHeaders === 'json') {
 							const jsonHeaders = this.getNodeParameter('jsonHeadersParameter', i, '') as string;
@@ -613,36 +740,74 @@ export class ScrapingBee implements INodeType {
 							}
 						}
 					}
-					requestOptions.encoding = null;
 
+					requestOptions.method = requestMethod;
+
+					if (requestMethod === 'POST' || requestMethod === 'PUT') {
+						const sendBody = this.getNodeParameter('sendBody', i, false) as boolean;
+						if (sendBody) {
+							scrapingBeeUrlParams.forward_headers = true;
+							let forwardedBody: string | Buffer = '';
+							const bodyContentType = this.getNodeParameter('bodyContentType', i, 'formUrlencoded') as string;
+
+							if (bodyContentType === 'formUrlencoded') {
+								const bodyParameters = this.getNodeParameter('bodyParameters', i, { parameter: [] }) as { parameter: { name: string; value: string }[] };
+								const urlSearchParams = new URLSearchParams();
+								for (const param of bodyParameters.parameter) {
+									urlSearchParams.append(param.name, param.value);
+								}
+								forwardedBody = urlSearchParams.toString();
+								headers['Spb-Content-Type'] = 'application/x-www-form-urlencoded';
+							} else if (bodyContentType === 'json') {
+								forwardedBody = this.getNodeParameter('jsonBodyParameter', i, '') as string;
+								headers['Spb-Content-Type'] = 'application/json';
+							} else if (bodyContentType === 'raw') {
+								forwardedBody = this.getNodeParameter('rawBodyParameter', i, '') as string;
+								headers['Spb-Content-Type'] = this.getNodeParameter('rawContentType', i, 'text/plain') as string;
+							}
+
+							// The body of the request to ScrapingBee is the exact body for the target
+							requestOptions.body = forwardedBody;
+						}
+					}
 				} else if (resource === 'googleSearchAPI') {
 					endpoint = 'https://app.scrapingbee.com/api/v1/store/google';
-					qs.search = this.getNodeParameter('search', i) as string;
-
+					requestOptions.method = 'GET';
+					scrapingBeeUrlParams.search = this.getNodeParameter('search', i) as string;
+					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
+					Object.keys(additionalFields).forEach(key => {
+						const snakeKey = key.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+						if (additionalFields[key] !== '' && additionalFields[key] !== undefined && additionalFields[key] !== null) {
+							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
+						}
+					});
 				} else { // usage
 					endpoint = 'https://app.scrapingbee.com/api/v1/usage';
+					requestOptions.method = 'GET';
 				}
 
-				requestOptions.method = requestMethod;
+				// Assign all collected URL parameters and the final URL to the request options
 				requestOptions.url = endpoint;
+				requestOptions.qs = scrapingBeeUrlParams;
 
-				const response = await this.helpers.request(requestOptions);
+				const response = await this.helpers.httpRequestWithAuthentication.call(
+					this,
+					'ScrapingBeeApi',
+					requestOptions,
+				);
 				const contentType = (response.headers['content-type'] || '').split(';')[0];
 				const responseBody = Buffer.from(response.body);
 
 				if (contentType.includes('application/json')) {
 					try {
-						// Attempt to parse the response as JSON
 						const jsonData = JSON.parse(responseBody.toString());
 						returnData.push({ json: jsonData, pairedItem: { item: i } });
 					} catch (parseError) {
-						// If parsing fails, return the raw string to avoid crashing the workflow
 						returnData.push({ json: { raw: responseBody.toString() }, pairedItem: { item: i } });
 					}
 				} else if (contentType.startsWith('text/')) {
 					returnData.push({ json: { data: responseBody.toString() }, pairedItem: { item: i } });
 				} else {
-					// Handle binary data
 					const contentDisposition = response.headers['content-disposition'];
 					let fileName = '';
 					let directory = '';
@@ -654,9 +819,9 @@ export class ScrapingBee implements INodeType {
 						}
 					}
 
-					if (!fileName && qs.url) {
+					if (!fileName && requestOptions.qs?.url) {
 						try {
-							const url = new URL(qs.url);
+							const url = new URL(requestOptions.qs.url as string);
 							const pathParts = url.pathname.split('/').filter(p => p);
 							fileName = pathParts.pop() || '';
 							directory = pathParts.join('/');

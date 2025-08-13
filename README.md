@@ -44,6 +44,7 @@ n8n 1.101.2 and above
 
 ## Version history
 
+- 0.1.4: Added option to send body in POST and PUT requests, replaced deprecated interface and method, set n8n as user-agent and other minor changes
 - 0.1.3: Added a credentials test
 - 0.1.2: Fixed credentials file link
 - 0.1.1: Minor bug fix
