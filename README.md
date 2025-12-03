@@ -49,6 +49,7 @@ n8n 1.101.2 and above
 
 ## Version history
 
+- 0.1.6: Added support for YouTube APIs
 - 0.1.5: Added support for Amazon, Walmart, and ChatGPT APIs, and configured it to be used as a tool for AI Agent
 - 0.1.4: Added option to send body in POST and PUT requests, replaced deprecated interface and method, set n8n as user-agent and other minor changes
 - 0.1.3: Added a credentials test
