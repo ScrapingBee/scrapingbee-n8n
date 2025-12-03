@@ -71,6 +71,22 @@ export class ScrapingBee implements INodeType {
 						name: 'Walmart Search API',
 						value: 'walmartSearchAPI',
 					},
+					{
+						name: 'YouTube Metadata API',
+						value: 'youtubeMetadataAPI',
+					},
+					{
+						name: 'YouTube Search API',
+						value: 'youtubeSearchAPI',
+					},
+					{
+						name: 'YouTube Trainability API',
+						value: 'youtubeTrainabilityAPI',
+					},
+					{
+						name: 'YouTube Transcript API',
+						value: 'youtubeTranscriptAPI',
+					},
 				],
 				default: 'htmlAPI',
 			},
@@ -250,6 +266,91 @@ export class ScrapingBee implements INodeType {
 						value: 'get',
 						action: 'Get usage data',
 						description: 'Get your API usage data',
+					},
+				],
+				default: 'get',
+			},
+			// Operation for YouTube Metadata API
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['youtubeMetadataAPI'],
+					},
+				},
+				options: [
+					{
+						name: 'GET',
+						value: 'get',
+						action: 'Get detailed video metadata from YOUTUBE using our YOUTUBE METADATA API',
+						description: 'Get detailed video metadata',
+					},
+				],
+				default: 'get',
+			},
+			// Operation for YouTube Search API
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['youtubeSearchAPI'],
+					},
+				},
+				options: [
+					{
+						name: 'GET',
+						value: 'get',
+						action: 'Get search results from YOUTUBE using our YOUTUBE SEARCH API',
+						description: 'Get YouTube search results',
+					},
+				],
+				default: 'get',
+			},
+			// Operation for YouTube Trainability API
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['youtubeTrainabilityAPI'],
+					},
+				},
+				options: [
+					{
+						name: 'GET',
+						value: 'get',
+						action:
+							'Get video transcript availability status from YOUTUBE using our YOUTUBE TRAINABILITY API',
+						description: 'Check if a video has transcripts available for training purposes',
+					},
+				],
+				default: 'get',
+			},
+			// Operation for YouTube Transcript API
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['youtubeTranscriptAPI'],
+					},
+				},
+				options: [
+					{
+						name: 'GET',
+						value: 'get',
+						action: 'Get video transcripts from YOUTUBE using our YOUTUBE TRANSCRIPT API',
+						description: 'Get video transcripts (captions/subtitles)',
 					},
 				],
 				default: 'get',
@@ -483,7 +584,7 @@ export class ScrapingBee implements INodeType {
 				default: 'pizza',
 				displayOptions: {
 					show: {
-						resource: ['googleSearchAPI'],
+						resource: ['googleSearchAPI', 'youtubeSearchAPI'],
 					},
 				},
 			},
@@ -536,6 +637,19 @@ export class ScrapingBee implements INodeType {
 				displayOptions: {
 					show: {
 						resource: ['chatgptAPI'],
+					},
+				},
+			},
+			{
+				displayName: 'Video ID',
+				description: 'YouTube Video ID',
+				required: true,
+				name: 'videoId',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						resource: ['youtubeMetadataAPI', 'youtubeTrainabilityAPI', 'youtubeTranscriptAPI'],
 					},
 				},
 			},
@@ -1309,6 +1423,187 @@ export class ScrapingBee implements INodeType {
 					},
 				],
 			},
+			// Additional Fields for YouTube Search API
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				default: {},
+				placeholder: 'Add Field',
+				displayOptions: {
+					show: {
+						resource: ['youtubeSearchAPI'],
+					},
+				},
+				options: [
+					{
+						displayName: '360° Videos',
+						name: '360',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to return only 360-degree videos or not',
+					},
+					{
+						displayName: '3D Videos',
+						name: '3d',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to return only 3D videos or not',
+					},
+					{
+						displayName: '4K Filter',
+						name: '4k',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to return only 4K videos or not',
+					},
+					{
+						displayName: 'Creative Commons',
+						name: 'creativeCommons',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to return only videos with Creative Commons license or not',
+					},
+					{
+						displayName: 'Duration Filter',
+						name: 'duration',
+						type: 'options',
+						description: 'Filter by video duration (minutes)',
+						options: [
+							{ name: 'Any Duration', value: '' },
+							{ name: '< 4 Minutes', value: '<4' },
+							{ name: '4-20 Minutes', value: '4-20' },
+							{ name: '> 20 Minutes', value: '>20' },
+						],
+						default: '',
+					},
+					{
+						displayName: 'HD Filter',
+						name: 'hd',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to return only HD videos or not',
+					},
+					{
+						displayName: 'HDR Videos',
+						name: 'hdr',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to return only HDR videos or not',
+					},
+					{
+						displayName: 'Live Streams',
+						name: 'live',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to return only live streams or not',
+					},
+					{
+						displayName: 'Location Filter',
+						name: 'location',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to return only videos with location metadata or not',
+					},
+					// NOT WORKING IN API
+					// {
+					// 	displayName: 'Purchased',
+					// 	name: 'purchased',
+					// 	type: 'boolean',
+					// 	default: false,
+					// 	description: 'Whether to return only purchased content or not',
+					// },
+					{
+						displayName: 'Result Type',
+						name: 'type',
+						type: 'options',
+						description: 'Result type to return',
+						options: [
+							{ name: 'All Types', value: '' },
+							{ name: 'Channel', value: 'channel' },
+							{ name: 'Movie', value: 'movie' },
+							{ name: 'Playlist', value: 'playlist' },
+							{ name: 'Video', value: 'video' },
+						],
+						default: '',
+					},
+					{
+						displayName: 'Sort By',
+						name: 'sort_by',
+						type: 'options',
+						description: 'Sorting method for results',
+						options: [
+							{ name: 'Rating', value: 'rating' },
+							{ name: 'Relevance', value: 'relevance' },
+							{ name: 'View Count', value: 'view_count' },
+							{ name: 'Upload Date', value: 'upload_date' },
+						],
+						default: 'relevance',
+					},
+					{
+						displayName: 'Subtitles Filter',
+						name: 'subtitles',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to return only videos with subtitles/closed captions or not',
+					},
+					{
+						displayName: 'Upload Date',
+						name: 'upload_date',
+						type: 'options',
+						description: 'Filter resulting by upload date',
+						options: [
+							{ name: 'Any Date', value: '' },
+							{ name: 'Last Hour', value: 'last_hour' },
+							{ name: 'This Month', value: 'this_month' },
+							{ name: 'This Week', value: 'this_week' },
+							{ name: 'This Year', value: 'this_year' },
+							{ name: 'Today', value: 'today' },
+						],
+						default: '',
+					},
+					{
+						displayName: 'VR180 Videos',
+						name: 'vr180',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to return only VR180 videos or not',
+					},
+				],
+			},
+			// Additional Fields for YouTube Transcript API
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				default: {},
+				placeholder: 'Add Field',
+				displayOptions: {
+					show: {
+						resource: ['youtubeTranscriptAPI'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Language',
+						name: 'language',
+						type: 'string',
+						default: 'en',
+						description: 'Transcript language (ISO code)',
+					},
+					{
+						displayName: 'Transcript Origin',
+						name: 'transcript_origin',
+						type: 'options',
+						description: 'Choose auto-generated or uploader-provided transcripts',
+						options: [
+							{ name: 'Auto Generated', value: 'auto_generated' },
+							{ name: 'Uploader Provided', value: 'uploader_provided' },
+						],
+						default: 'auto_generated',
+					},
+				],
+			},
 		],
 	};
 
@@ -1494,6 +1789,66 @@ export class ScrapingBee implements INodeType {
 					endpoint = 'https://app.scrapingbee.com/api/v1/chatgpt';
 					requestOptions.method = 'GET';
 					scrapingBeeUrlParams.prompt = this.getNodeParameter('prompt', i) as string;
+					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
+					Object.keys(additionalFields).forEach((key) => {
+						const snakeKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+						if (
+							additionalFields[key] !== '' &&
+							additionalFields[key] !== undefined &&
+							additionalFields[key] !== null
+						) {
+							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
+						}
+					});
+				} else if (resource === 'youtubeMetadataAPI') {
+					endpoint = 'https://app.scrapingbee.com/api/v1/youtube/metadata';
+					requestOptions.method = 'GET';
+					scrapingBeeUrlParams.video_id = this.getNodeParameter('videoId', i) as string;
+					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
+					Object.keys(additionalFields).forEach((key) => {
+						const snakeKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+						if (
+							additionalFields[key] !== '' &&
+							additionalFields[key] !== undefined &&
+							additionalFields[key] !== null
+						) {
+							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
+						}
+					});
+				} else if (resource === 'youtubeSearchAPI') {
+					endpoint = 'https://app.scrapingbee.com/api/v1/youtube/search';
+					requestOptions.method = 'GET';
+					scrapingBeeUrlParams.search = this.getNodeParameter('search', i) as string;
+					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
+					Object.keys(additionalFields).forEach((key) => {
+						const snakeKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+						if (
+							additionalFields[key] !== '' &&
+							additionalFields[key] !== undefined &&
+							additionalFields[key] !== null
+						) {
+							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
+						}
+					});
+				} else if (resource === 'youtubeTrainabilityAPI') {
+					endpoint = 'https://app.scrapingbee.com/api/v1/youtube/trainability';
+					requestOptions.method = 'GET';
+					scrapingBeeUrlParams.video_id = this.getNodeParameter('videoId', i) as string;
+					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
+					Object.keys(additionalFields).forEach((key) => {
+						const snakeKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+						if (
+							additionalFields[key] !== '' &&
+							additionalFields[key] !== undefined &&
+							additionalFields[key] !== null
+						) {
+							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
+						}
+					});
+				} else if (resource === 'youtubeTranscriptAPI') {
+					endpoint = 'https://app.scrapingbee.com/api/v1/youtube/transcript';
+					requestOptions.method = 'GET';
+					scrapingBeeUrlParams.video_id = this.getNodeParameter('videoId', i) as string;
 					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
 					Object.keys(additionalFields).forEach((key) => {
 						const snakeKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
