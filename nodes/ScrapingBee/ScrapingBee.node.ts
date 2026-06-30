@@ -765,6 +765,36 @@ export class ScrapingBee implements INodeType {
 						description: 'Whether to wrap response in JSON or not',
 					},
 					{
+						displayName: 'Max Cost',
+						name: 'maxCost',
+						type: 'number',
+						typeOptions: {
+							minValue: 1,
+						},
+						default: 1,
+						description: 'Max credits a request may cost. Omit for no cap. Requires Mode = Auto.',
+						displayOptions: {
+							show: {
+								mode: ['auto'],
+							},
+						},
+					},
+					{
+						displayName: 'Mode',
+						name: 'mode',
+						type: 'options',
+						options: [
+							{
+								name: 'Auto',
+								value: 'auto',
+							},
+						],
+						// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-options
+						default: '',
+						description:
+							'Auto picks the cheapest scraping config that succeeds (GET only): it tries cheap to expensive, stops at the first success, and charges only for the winning config (0 credits if all fail). Incompatible with Render JS, Premium Proxy and Stealth Proxy (hidden while Auto is selected).',
+					},
+					{
 						displayName: 'Own Proxy',
 						name: 'ownProxy',
 						type: 'string',
@@ -778,6 +808,11 @@ export class ScrapingBee implements INodeType {
 						default: false,
 						description:
 							'Whether to use premium proxies to bypass difficult to scrape websites or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Render JS',
@@ -786,6 +821,11 @@ export class ScrapingBee implements INodeType {
 						default: true,
 						description:
 							'Whether to render the JavaScript on the page with a headless browser or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Return Page Markdown',
@@ -852,6 +892,11 @@ export class ScrapingBee implements INodeType {
 						type: 'boolean',
 						default: false,
 						description: 'Whether to use special stealth proxy pool or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Timeout',
@@ -867,6 +912,11 @@ export class ScrapingBee implements INodeType {
 						default: false,
 						description:
 							'Whether to transparently return the same HTTP code of the page requested or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Wait',
