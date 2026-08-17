@@ -64,7 +64,7 @@ n8n 1.101.2 and above
 
 ## Version history
 
-- 1.0.0: Added Amazon Pricing, Fast Search, and Gemini APIs. Added HTML API Auto-Mode (`mode`, `max_cost`) and new Google Search parameters (`light_request`, `pages`, `date_range`, geotargeting, shopping filters, and new search types). Breaking: renamed YouTube Transcript API to YouTube Subtitles API (new `/youtube/subtitles` endpoint, `subtitle_origin` parameter), and removed the discontinued YouTube Trainability API (the endpoint no longer exists).
+- 1.0.0: Switched authentication from the deprecated `api_key` query parameter to the `Authorization: Bearer` header (existing credentials keep working). Added Amazon Pricing, Fast Search, and Gemini APIs. Added HTML API Auto-Mode (`mode`, `max_cost`) and new Google Search parameters (`light_request`, `pages`, `date_range`, geotargeting, shopping filters, and new search types). Breaking: renamed YouTube Transcript API to YouTube Subtitles API (new `/youtube/subtitles` endpoint, `subtitle_origin` parameter), and removed the discontinued YouTube Trainability API (the endpoint no longer exists).
 - 0.1.6: Added support for YouTube APIs
 - 0.1.5: Added support for Amazon, Walmart, and ChatGPT APIs, and configured it to be used as a tool for AI Agent
 - 0.1.4: Added option to send body in POST and PUT requests, replaced deprecated interface and method, set n8n as user-agent and other minor changes
