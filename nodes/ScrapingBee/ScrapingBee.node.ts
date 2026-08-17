@@ -779,6 +779,14 @@ export class ScrapingBee implements INodeType {
 						description: 'Premium proxy geolocation',
 					},
 					{
+						displayName: 'Custom Google',
+						name: 'customGoogle',
+						type: 'boolean',
+						default: false,
+						description:
+							'Whether you are scraping a Google domain or not. Required to scrape Google domains; each request costs 20 credits.',
+					},
+					{
 						displayName: 'Device',
 						name: 'device',
 						type: 'options',
@@ -1135,6 +1143,13 @@ export class ScrapingBee implements INodeType {
 						type: 'string',
 						default: '',
 						description: 'Minimum price filter; only applies to the shopping search type',
+					},
+					{
+						displayName: 'Number of Results',
+						name: 'nbResults',
+						type: 'number',
+						default: 100,
+						description: 'The number of results you want to get back from Google Search',
 					},
 					{
 						displayName: 'Page',
@@ -1581,6 +1596,13 @@ export class ScrapingBee implements INodeType {
 						type: 'boolean',
 						default: false,
 						description: 'Whether to add the full html of the page in the results or not',
+					},
+					{
+						displayName: 'Autoselect Variant',
+						name: 'autoselectVariant',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to automatically select product variant if applicable or not',
 					},
 					{
 						displayName: 'Country',
