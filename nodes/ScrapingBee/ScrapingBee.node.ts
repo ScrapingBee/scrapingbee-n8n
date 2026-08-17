@@ -1061,7 +1061,7 @@ export class ScrapingBee implements INodeType {
 						type: 'string',
 						default: '',
 						description: 'Extra Google URL parameters',
-						hint: 'You can also pass multiple parameters, separated by &: example: tbs=qdr:d&lr=lang_fr',
+						hint: 'Allowed keys: filter, fpstate, locale, nfpr, tbm, tbs, udm. You can pass multiple parameters separated by &, example: tbs=qdr:d&filter=0',
 					},
 					{
 						displayName: 'Language',
@@ -1232,15 +1232,15 @@ export class ScrapingBee implements INodeType {
 						// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-options
 						default: '',
 					},
-					{
-						displayName: 'Fulfillment Type',
-						name: 'fulfillmentType',
-						type: 'options',
-						description: 'Fulfillment type filter',
-						options: [{ name: 'In Store', value: 'in_store' }],
-						// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-options
-						default: '',
-					},
+					// NOT WORKING IN API
+					// {
+					// 	displayName: 'Fulfillment Type',
+					// 	name: 'fulfillmentType',
+					// 	type: 'options',
+					// 	description: 'Fulfillment type filter',
+					// 	options: [{ name: 'In Store', value: 'in_store' }],
+					// 	default: '',
+					// },
 					{
 						displayName: 'Light Request',
 						name: 'lightRequest',
@@ -1420,7 +1420,7 @@ export class ScrapingBee implements INodeType {
 						name: 'categoryId',
 						type: 'string',
 						default: '',
-						description: 'Filter search results by category ID',
+						description: 'Filter search results by numeric category ID (Amazon browse node ID)',
 					},
 					{
 						displayName: 'Country',
@@ -1679,13 +1679,14 @@ export class ScrapingBee implements INodeType {
 						default: 'com',
 						description: 'Top-level domain to use (e.g., com, co.uk, de)',
 					},
-					{
-						displayName: 'Language',
-						name: 'language',
-						type: 'string',
-						default: '',
-						description: 'Language code for the request (ISO format)',
-					},
+					// NOT WORKING IN API
+					// {
+					// 	displayName: 'Language',
+					// 	name: 'language',
+					// 	type: 'string',
+					// 	default: '',
+					// 	description: 'Language code for the request (ISO format)',
+					// },
 					{
 						displayName: 'Light Request',
 						name: 'lightRequest',
