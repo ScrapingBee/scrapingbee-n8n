@@ -47,7 +47,6 @@ n8n 1.101.2 and above
 ## Resources
 
 * [n8n community nodes documentation](https://docs.n8n.io/integrations/#community-nodes)
-* [ScrapingBee documentation index](https://www.scrapingbee.com/llms.txt)
 * [HTML API](https://www.scrapingbee.com/documentation/)
 * [Google Search API](https://www.scrapingbee.com/documentation/google/)
 * [Fast Search API](https://www.scrapingbee.com/documentation/fast-search/)
