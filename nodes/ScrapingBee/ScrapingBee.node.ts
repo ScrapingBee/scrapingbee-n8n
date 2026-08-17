@@ -822,9 +822,17 @@ export class ScrapingBee implements INodeType {
 						displayName: 'Max Cost',
 						name: 'maxCost',
 						type: 'number',
-						default: '',
+						typeOptions: {
+							minValue: 1,
+						},
+						default: 1,
 						description:
 							'Maximum credit tier Auto-Mode may attempt (requires Mode to be set to Auto)',
+						displayOptions: {
+							show: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Mode',
@@ -850,6 +858,11 @@ export class ScrapingBee implements INodeType {
 						default: false,
 						description:
 							'Whether to use premium proxies to bypass difficult to scrape websites or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Render JS',
@@ -858,6 +871,11 @@ export class ScrapingBee implements INodeType {
 						default: true,
 						description:
 							'Whether to render the JavaScript on the page with a headless browser or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Return Page Markdown',
@@ -924,6 +942,11 @@ export class ScrapingBee implements INodeType {
 						type: 'boolean',
 						default: false,
 						description: 'Whether to use special stealth proxy pool or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Tag',
@@ -947,6 +970,11 @@ export class ScrapingBee implements INodeType {
 						default: false,
 						description:
 							'Whether to transparently return the same HTTP code of the page requested or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Wait',
