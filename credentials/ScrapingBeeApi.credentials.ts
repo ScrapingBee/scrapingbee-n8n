@@ -19,8 +19,8 @@ export class ScrapingBeeApi implements ICredentialType {
 	authenticate: IAuthenticateGeneric = {
 		type: 'generic',
 		properties: {
-			qs: {
-				api_key: '={{$credentials.apiKey}}',
+			headers: {
+				Authorization: '=Bearer {{$credentials.apiKey}}',
 			},
 		},
 	};
