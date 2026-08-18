@@ -784,7 +784,7 @@ export class ScrapingBee implements INodeType {
 						type: 'boolean',
 						default: false,
 						description:
-							'Whether you are scraping a Google domain or not. Required to scrape Google domains; each request costs 20 credits.',
+							'Whether you are scraping a Google domain or not. Required to scrape Google domains; each request costs 20 credits. For structured Google results, prefer the dedicated Google Search API resource instead.',
 					},
 					{
 						displayName: 'Device',
