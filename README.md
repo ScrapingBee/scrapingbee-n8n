@@ -21,6 +21,17 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 
 - HTML API: GET, POST, PUT
 - Google Search API: GET
+- Fast Search API: GET
+- Amazon Search API: GET
+- Amazon Product API: GET
+- Amazon Pricing API: GET
+- Walmart Search API: GET
+- Walmart Product API: GET
+- YouTube Search API: GET
+- YouTube Metadata API: GET
+- YouTube Subtitles API: GET
+- ChatGPT API: GET
+- Gemini API: GET
 - Usage: GET
 
 ## Credentials
@@ -38,17 +49,22 @@ n8n 1.101.2 and above
 * [n8n community nodes documentation](https://docs.n8n.io/integrations/#community-nodes)
 * [HTML API](https://www.scrapingbee.com/documentation/)
 * [Google Search API](https://www.scrapingbee.com/documentation/google/)
+* [Fast Search API](https://www.scrapingbee.com/documentation/fast-search/)
 * [Amazon Search API](https://www.scrapingbee.com/documentation/amazon/#amazon-search-api)
 * [Amazon Product API](https://www.scrapingbee.com/documentation/amazon/#amazon-product-api)
+* [Amazon Pricing API](https://www.scrapingbee.com/documentation/amazon/#amazon-pricing-api)
 * [Walmart Search API](https://www.scrapingbee.com/documentation/walmart/#walmart-search-api)
 * [Walmart Product API](https://www.scrapingbee.com/documentation/walmart/#walmart-product-api)
+* [YouTube APIs](https://www.scrapingbee.com/documentation/youtube/)
 * [ChatGPT API](https://www.scrapingbee.com/documentation/chatgpt/)
+* [Gemini API](https://www.scrapingbee.com/documentation/gemini/)
 * [Usage](https://www.scrapingbee.com/documentation/#usage-endpoint)
 * [Data Extraction](https://www.scrapingbee.com/documentation/data-extraction/)
 * [JavaScript Scenario](https://www.scrapingbee.com/documentation/js-scenario/)
 
 ## Version history
 
+- 1.0.0: Added Amazon Pricing, Fast Search, and Gemini APIs. Added HTML API Auto-Mode (`mode`, `max_cost`) and new Google Search parameters (`light_request`, `pages`, `date_range`, geotargeting, shopping filters, and new search types). Breaking: renamed YouTube Transcript API to YouTube Subtitles API (new `/youtube/subtitles` endpoint, `subtitle_origin` parameter), and removed the discontinued YouTube Trainability API (the endpoint no longer exists).
 - 0.1.6: Added support for YouTube APIs
 - 0.1.5: Added support for Amazon, Walmart, and ChatGPT APIs, and configured it to be used as a tool for AI Agent
 - 0.1.4: Added option to send body in POST and PUT requests, replaced deprecated interface and method, set n8n as user-agent and other minor changes

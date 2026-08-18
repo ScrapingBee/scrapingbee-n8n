@@ -40,6 +40,10 @@ export class ScrapingBee implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
+						name: 'Amazon Pricing API',
+						value: 'amazonPricingAPI',
+					},
+					{
 						name: 'Amazon Product API',
 						value: 'amazonProductAPI',
 					},
@@ -50,6 +54,14 @@ export class ScrapingBee implements INodeType {
 					{
 						name: 'ChatGPT API',
 						value: 'chatgptAPI',
+					},
+					{
+						name: 'Fast Search API',
+						value: 'fastSearchAPI',
+					},
+					{
+						name: 'Gemini API',
+						value: 'geminiAPI',
 					},
 					{
 						name: 'Google Search API',
@@ -80,12 +92,8 @@ export class ScrapingBee implements INodeType {
 						value: 'youtubeSearchAPI',
 					},
 					{
-						name: 'YouTube Trainability API',
-						value: 'youtubeTrainabilityAPI',
-					},
-					{
-						name: 'YouTube Transcript API',
-						value: 'youtubeTranscriptAPI',
+						name: 'YouTube Subtitles API',
+						value: 'youtubeSubtitlesAPI',
 					},
 				],
 				default: 'htmlAPI',
@@ -140,6 +148,27 @@ export class ScrapingBee implements INodeType {
 						value: 'get',
 						action: 'Get SERP data using GOOGLE SEARCH API',
 						description: 'Get SERP data using our Google Search API',
+					},
+				],
+				default: 'get',
+			},
+			// Operation for Fast Search API
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['fastSearchAPI'],
+					},
+				},
+				options: [
+					{
+						name: 'GET',
+						value: 'get',
+						action: 'Get lightweight SERP data using FAST SEARCH API',
+						description: 'Get lightweight, low-latency Google search results',
 					},
 				],
 				default: 'get',
@@ -228,6 +257,27 @@ export class ScrapingBee implements INodeType {
 				],
 				default: 'get',
 			},
+			// Operation for Amazon Pricing API
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['amazonPricingAPI'],
+					},
+				},
+				options: [
+					{
+						name: 'GET',
+						value: 'get',
+						action: 'Get pricing offers and seller information using AMAZON PRICING API',
+						description: 'Get pricing, offers, and seller information from Amazon',
+					},
+				],
+				default: 'get',
+			},
 			// Operation for ChatGPT API
 			{
 				displayName: 'Operation',
@@ -245,6 +295,27 @@ export class ScrapingBee implements INodeType {
 						value: 'get',
 						action: 'Get AI response from CHATGPT for your prompt using our CHATGPT API',
 						description: 'Get AI Response from ChatGPT based on your prompt',
+					},
+				],
+				default: 'get',
+			},
+			// Operation for Gemini API
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['geminiAPI'],
+					},
+				},
+				options: [
+					{
+						name: 'GET',
+						value: 'get',
+						action: 'Get AI response from GEMINI for your prompt using our GEMINI API',
+						description: 'Get AI Response from Gemini based on your prompt',
 					},
 				],
 				default: 'get',
@@ -312,7 +383,7 @@ export class ScrapingBee implements INodeType {
 				],
 				default: 'get',
 			},
-			// Operation for YouTube Trainability API
+			// Operation for YouTube Subtitles API
 			{
 				displayName: 'Operation',
 				name: 'operation',
@@ -320,37 +391,15 @@ export class ScrapingBee implements INodeType {
 				noDataExpression: true,
 				displayOptions: {
 					show: {
-						resource: ['youtubeTrainabilityAPI'],
+						resource: ['youtubeSubtitlesAPI'],
 					},
 				},
 				options: [
 					{
 						name: 'GET',
 						value: 'get',
-						action:
-							'Get video transcript availability status from YOUTUBE using our YOUTUBE TRAINABILITY API',
-						description: 'Check if a video has transcripts available for training purposes',
-					},
-				],
-				default: 'get',
-			},
-			// Operation for YouTube Transcript API
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: ['youtubeTranscriptAPI'],
-					},
-				},
-				options: [
-					{
-						name: 'GET',
-						value: 'get',
-						action: 'Get video transcripts from YOUTUBE using our YOUTUBE TRANSCRIPT API',
-						description: 'Get video transcripts (captions/subtitles)',
+						action: 'Get video subtitles from YOUTUBE using our YOUTUBE SUBTITLES API',
+						description: 'Get video subtitles/captions (transcripts)',
 					},
 				],
 				default: 'get',
@@ -584,7 +633,7 @@ export class ScrapingBee implements INodeType {
 				default: 'pizza',
 				displayOptions: {
 					show: {
-						resource: ['googleSearchAPI', 'youtubeSearchAPI'],
+						resource: ['googleSearchAPI', 'fastSearchAPI', 'youtubeSearchAPI'],
 					},
 				},
 			},
@@ -629,14 +678,27 @@ export class ScrapingBee implements INodeType {
 			},
 			{
 				displayName: 'Prompt',
-				description: 'The prompt you want to send to ChatGPT',
+				description: 'The prompt you want to send to the AI model',
 				required: true,
 				name: 'prompt',
 				type: 'string',
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['chatgptAPI'],
+						resource: ['chatgptAPI', 'geminiAPI'],
+					},
+				},
+			},
+			{
+				displayName: 'ASIN',
+				description: 'Amazon product identifier (must be a valid 10-character ASIN code)',
+				required: true,
+				name: 'asin',
+				type: 'string',
+				default: '',
+				displayOptions: {
+					show: {
+						resource: ['amazonPricingAPI'],
 					},
 				},
 			},
@@ -649,7 +711,7 @@ export class ScrapingBee implements INodeType {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['youtubeMetadataAPI', 'youtubeTrainabilityAPI', 'youtubeTranscriptAPI'],
+						resource: ['youtubeMetadataAPI', 'youtubeSubtitlesAPI'],
 					},
 				},
 			},
@@ -722,7 +784,7 @@ export class ScrapingBee implements INodeType {
 						type: 'boolean',
 						default: false,
 						description:
-							'Whether you are scraping Google domains or not? Set to true to scrape Google',
+							'Whether you are scraping a Google domain or not. Required to scrape Google domains; each request costs 20 credits.',
 					},
 					{
 						displayName: 'Device',
@@ -765,6 +827,32 @@ export class ScrapingBee implements INodeType {
 						description: 'Whether to wrap response in JSON or not',
 					},
 					{
+						displayName: 'Max Cost',
+						name: 'maxCost',
+						type: 'number',
+						typeOptions: {
+							minValue: 1,
+						},
+						default: 1,
+						description:
+							'Maximum credit tier Auto-Mode may attempt (requires Mode to be set to Auto)',
+						displayOptions: {
+							show: {
+								mode: ['auto'],
+							},
+						},
+					},
+					{
+						displayName: 'Mode',
+						name: 'mode',
+						type: 'options',
+						description:
+							'Auto-Mode escalates through proxy/rendering tiers until one succeeds and only charges the successful tier. GET only; cannot be combined with Render JS, Premium Proxy, Stealth Proxy, or Transparent Status Code.',
+						options: [{ name: 'Auto', value: 'auto' }],
+						// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-options
+						default: '',
+					},
+					{
 						displayName: 'Own Proxy',
 						name: 'ownProxy',
 						type: 'string',
@@ -778,6 +866,11 @@ export class ScrapingBee implements INodeType {
 						default: false,
 						description:
 							'Whether to use premium proxies to bypass difficult to scrape websites or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Render JS',
@@ -786,6 +879,11 @@ export class ScrapingBee implements INodeType {
 						default: true,
 						description:
 							'Whether to render the JavaScript on the page with a headless browser or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Return Page Markdown',
@@ -852,6 +950,19 @@ export class ScrapingBee implements INodeType {
 						type: 'boolean',
 						default: false,
 						description: 'Whether to use special stealth proxy pool or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
+					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
 					},
 					{
 						displayName: 'Timeout',
@@ -867,6 +978,11 @@ export class ScrapingBee implements INodeType {
 						default: false,
 						description:
 							'Whether to transparently return the same HTTP code of the page requested or not',
+						displayOptions: {
+							hide: {
+								mode: ['auto'],
+							},
+						},
 					},
 					{
 						displayName: 'Wait',
@@ -941,6 +1057,22 @@ export class ScrapingBee implements INodeType {
 						description: 'Country code from which you would like the request to come from',
 					},
 					{
+						displayName: 'Date Range',
+						name: 'dateRange',
+						type: 'options',
+						description:
+							'Filter results by date; only applies to classic, news, and images search types',
+						options: [
+							{ name: 'Any Time', value: '' },
+							{ name: 'Past Day', value: 'past_day' },
+							{ name: 'Past Hour', value: 'past_hour' },
+							{ name: 'Past Month', value: 'past_month' },
+							{ name: 'Past Week', value: 'past_week' },
+							{ name: 'Past Year', value: 'past_year' },
+						],
+						default: '',
+					},
+					{
 						displayName: 'Device',
 						name: 'device',
 						type: 'options',
@@ -965,7 +1097,7 @@ export class ScrapingBee implements INodeType {
 						type: 'string',
 						default: '',
 						description: 'Extra Google URL parameters',
-						hint: 'You can also pass multiple parameters, separated by &: example: tbs=qdr:d&lr=lang_fr',
+						hint: 'Allowed keys: filter, fpstate, locale, nfpr, tbm, tbs, udm. You can pass multiple parameters separated by &, example: tbs=qdr:d&filter=0',
 					},
 					{
 						displayName: 'Language',
@@ -973,6 +1105,44 @@ export class ScrapingBee implements INodeType {
 						type: 'string',
 						default: 'en',
 						description: 'Language the search results will be displayed in',
+					},
+					{
+						displayName: 'Latitude',
+						name: 'latitude',
+						type: 'string',
+						default: '',
+						description:
+							'Latitude in decimal degrees for geo-targeted search; must be supplied together with longitude',
+					},
+					{
+						displayName: 'Light Request',
+						name: 'lightRequest',
+						type: 'boolean',
+						default: true,
+						description:
+							'Whether to use a light request (faster and cheaper). Set to false to force a regular browser request, which is needed for AI Overviews.',
+					},
+					{
+						displayName: 'Longitude',
+						name: 'longitude',
+						type: 'string',
+						default: '',
+						description:
+							'Longitude in decimal degrees for geo-targeted search; must be supplied together with latitude',
+					},
+					{
+						displayName: 'Max Price',
+						name: 'maxPrice',
+						type: 'string',
+						default: '',
+						description: 'Maximum price filter; only applies to the shopping search type',
+					},
+					{
+						displayName: 'Min Price',
+						name: 'minPrice',
+						type: 'string',
+						default: '',
+						description: 'Minimum price filter; only applies to the shopping search type',
 					},
 					{
 						displayName: 'Number of Results',
@@ -989,16 +1159,59 @@ export class ScrapingBee implements INodeType {
 						description: 'The page number you want to extract results from',
 					},
 					{
+						displayName: 'Pages',
+						name: 'pages',
+						type: 'number',
+						default: 1,
+						description:
+							'Number of consecutive pages to fetch and combine (max 10; 3 or fewer recommended)',
+					},
+					{
+						displayName: 'Radius',
+						name: 'radius',
+						type: 'string',
+						default: '',
+						description:
+							'Radius in meters around latitude/longitude; only takes effect when both are supplied',
+					},
+					{
 						displayName: 'Search Type',
 						name: 'searchType',
 						type: 'options',
-						description: 'The type of search you want to perform, (classic, news or maps)',
+						description: 'The type of search you want to perform',
 						options: [
+							{ name: 'Ads', value: 'ads' },
+							{ name: 'AI Mode', value: 'ai_mode' },
 							{ name: 'Classic', value: 'classic' },
-							{ name: 'News', value: 'news' },
+							{ name: 'Images', value: 'images' },
+							{ name: 'Lens', value: 'lens' },
 							{ name: 'Maps', value: 'maps' },
+							{ name: 'News', value: 'news' },
+							{ name: 'Shopping', value: 'shopping' },
 						],
 						default: 'classic',
+					},
+					{
+						displayName: 'Sort By',
+						name: 'sortBy',
+						type: 'options',
+						description: 'Sort order for results; only applies to the shopping search type',
+						options: [
+							{ name: 'Price High To Low', value: 'price_desc' },
+							{ name: 'Price Low To High', value: 'price_asc' },
+							{ name: 'Relevance', value: 'relevance' },
+							{ name: 'Reviews', value: 'reviews' },
+						],
+						// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-options
+						default: '',
+					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
 					},
 				],
 			},
@@ -1062,15 +1275,15 @@ export class ScrapingBee implements INodeType {
 						// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-options
 						default: '',
 					},
-					{
-						displayName: 'Fulfillment Type',
-						name: 'fulfillmentType',
-						type: 'options',
-						description: 'Fulfillment type filter',
-						options: [{ name: 'In Store', value: 'in_store' }],
-						// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-options
-						default: '',
-					},
+					// NOT WORKING IN API
+					// {
+					// 	displayName: 'Fulfillment Type',
+					// 	name: 'fulfillmentType',
+					// 	type: 'options',
+					// 	description: 'Fulfillment type filter',
+					// 	options: [{ name: 'In Store', value: 'in_store' }],
+					// 	default: '',
+					// },
 					{
 						displayName: 'Light Request',
 						name: 'lightRequest',
@@ -1094,6 +1307,14 @@ export class ScrapingBee implements INodeType {
 						description: 'Minimum price filter',
 					},
 					{
+						displayName: 'Screenshot',
+						name: 'screenshot',
+						type: 'boolean',
+						default: false,
+						description:
+							'Whether to force a browser screenshot (returned base64-encoded, costs 15 credits, ignores Light Request) or not',
+					},
+					{
 						displayName: 'Sort By',
 						name: 'sortBy',
 						type: 'options',
@@ -1107,11 +1328,26 @@ export class ScrapingBee implements INodeType {
 						default: 'best_match',
 					},
 					{
+						displayName: 'Start Page',
+						name: 'startPage',
+						type: 'number',
+						default: 1,
+						description: 'Page of the results to fetch',
+					},
+					{
 						displayName: 'Store ID',
 						name: 'storeId',
 						type: 'string',
 						default: '',
 						description: 'Specific Walmart store ID for localization',
+					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
 					},
 				],
 			},
@@ -1170,11 +1406,27 @@ export class ScrapingBee implements INodeType {
 							'Whether to use it without JavaScript-rendering or not. If false, forces JavaScript-rendered results.',
 					},
 					{
+						displayName: 'Screenshot',
+						name: 'screenshot',
+						type: 'boolean',
+						default: false,
+						description:
+							'Whether to force a browser screenshot (returned base64-encoded, costs 15 credits, ignores Light Request) or not',
+					},
+					{
 						displayName: 'Store ID',
 						name: 'storeId',
 						type: 'string',
 						default: '',
 						description: 'Specific Walmart store ID for localization',
+					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
 					},
 				],
 			},
@@ -1199,11 +1451,19 @@ export class ScrapingBee implements INodeType {
 						description: 'Whether to add the full html of the page in the results or not',
 					},
 					{
+						displayName: 'Autoselect Variant',
+						name: 'autoselectVariant',
+						type: 'boolean',
+						default: false,
+						description:
+							'Whether to automatically select the default/most popular product variant or not',
+					},
+					{
 						displayName: 'Category ID',
 						name: 'categoryId',
 						type: 'string',
 						default: '',
-						description: 'Filter search results by category ID',
+						description: 'Filter search results by numeric category ID (Amazon browse node ID)',
 					},
 					{
 						displayName: 'Country',
@@ -1270,6 +1530,14 @@ export class ScrapingBee implements INodeType {
 						description: 'Number of result pages to fetch',
 					},
 					{
+						displayName: 'Screenshot',
+						name: 'screenshot',
+						type: 'boolean',
+						default: false,
+						description:
+							'Whether to force a browser screenshot (returned base64-encoded, costs 15 credits, ignores Light Request) or not',
+					},
+					{
 						displayName: 'Sort By',
 						name: 'sortBy',
 						type: 'options',
@@ -1291,6 +1559,14 @@ export class ScrapingBee implements INodeType {
 						type: 'number',
 						default: 1,
 						description: 'First page of the results to fetch',
+					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
 					},
 					{
 						displayName: 'Zip Code',
@@ -1379,6 +1655,105 @@ export class ScrapingBee implements INodeType {
 							'Whether to use it without JavaScript-rendering or not. If false, forces JavaScript-rendered results.',
 					},
 					{
+						displayName: 'Screenshot',
+						name: 'screenshot',
+						type: 'boolean',
+						default: false,
+						description:
+							'Whether to force a browser screenshot (returned base64-encoded, costs 15 credits, ignores Light Request) or not',
+					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
+					},
+					{
+						displayName: 'Zip Code',
+						name: 'zipCode',
+						type: 'string',
+						default: '',
+						description: 'ZIP or postal code for geolocation',
+					},
+				],
+			},
+			// Additional Fields for Amazon Pricing API
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				default: {},
+				placeholder: 'Add Field',
+				displayOptions: {
+					show: {
+						resource: ['amazonPricingAPI'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Add HTML',
+						name: 'addHtml',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to add the full html of the page in the results or not',
+					},
+					{
+						displayName: 'Country',
+						name: 'country',
+						type: 'string',
+						default: '',
+						description:
+							'Country code for geolocation of the request. Must not match the domain\'s own country; use Zip Code instead in that case.',
+					},
+					{
+						displayName: 'Currency',
+						name: 'currency',
+						type: 'string',
+						default: '',
+						description: 'Currency code (ISO 4217) to display results',
+					},
+					{
+						displayName: 'Device',
+						name: 'device',
+						type: 'options',
+						description: 'Control the device the request will be sent from',
+						options: [{ name: 'Desktop', value: 'desktop' }],
+						default: 'desktop',
+					},
+					{
+						displayName: 'Domain',
+						name: 'domain',
+						type: 'string',
+						default: 'com',
+						description: 'Top-level domain to use (e.g., com, co.uk, de)',
+					},
+					// NOT WORKING IN API
+					// {
+					// 	displayName: 'Language',
+					// 	name: 'language',
+					// 	type: 'string',
+					// 	default: '',
+					// 	description: 'Language code for the request (ISO format)',
+					// },
+					{
+						displayName: 'Light Request',
+						name: 'lightRequest',
+						type: 'boolean',
+						default: true,
+						description:
+							'Whether to use it without JavaScript-rendering or not. If false, forces JavaScript-rendered results.',
+					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
+					},
+					{
 						displayName: 'Zip Code',
 						name: 'zipCode',
 						type: 'string',
@@ -1420,6 +1795,95 @@ export class ScrapingBee implements INodeType {
 						type: 'boolean',
 						default: false,
 						description: 'Whether to enable web search to enhance the GPT response or not',
+					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
+					},
+				],
+			},
+			// Additional Fields for Gemini API
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				default: {},
+				placeholder: 'Add Field',
+				displayOptions: {
+					show: {
+						resource: ['geminiAPI'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Add HTML',
+						name: 'addHtml',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to add the full html of the page in the results or not',
+					},
+					{
+						displayName: 'Country Code',
+						name: 'countryCode',
+						type: 'string',
+						default: '',
+						description: 'Country code from which you would like the request to come from',
+					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
+					},
+				],
+			},
+			// Additional Fields for Fast Search API
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				default: {},
+				placeholder: 'Add Field',
+				displayOptions: {
+					show: {
+						resource: ['fastSearchAPI'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Country Code',
+						name: 'countryCode',
+						type: 'string',
+						default: 'us',
+						description: 'Country code used to localize the search results (ISO 3166-1 alpha-2)',
+					},
+					{
+						displayName: 'Language',
+						name: 'language',
+						type: 'string',
+						default: 'en',
+						description: 'Language the search results will be displayed in',
+					},
+					{
+						displayName: 'Page',
+						name: 'page',
+						type: 'number',
+						default: 1,
+						description: 'The page number you want to extract results from',
+					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
 					},
 				],
 			},
@@ -1548,6 +2012,14 @@ export class ScrapingBee implements INodeType {
 						description: 'Whether to return only videos with subtitles/closed captions or not',
 					},
 					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
+					},
+					{
 						displayName: 'Upload Date',
 						name: 'upload_date',
 						type: 'options',
@@ -1571,7 +2043,7 @@ export class ScrapingBee implements INodeType {
 					},
 				],
 			},
-			// Additional Fields for YouTube Transcript API
+			// Additional Fields for YouTube Metadata API
 			{
 				displayName: 'Additional Fields',
 				name: 'additionalFields',
@@ -1580,7 +2052,30 @@ export class ScrapingBee implements INodeType {
 				placeholder: 'Add Field',
 				displayOptions: {
 					show: {
-						resource: ['youtubeTranscriptAPI'],
+						resource: ['youtubeMetadataAPI'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
+					},
+				],
+			},
+			// Additional Fields for YouTube Subtitles API
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				default: {},
+				placeholder: 'Add Field',
+				displayOptions: {
+					show: {
+						resource: ['youtubeSubtitlesAPI'],
 					},
 				},
 				options: [
@@ -1589,18 +2084,26 @@ export class ScrapingBee implements INodeType {
 						name: 'language',
 						type: 'string',
 						default: 'en',
-						description: 'Transcript language (ISO code)',
+						description: 'Subtitle language (ISO code)',
 					},
 					{
-						displayName: 'Transcript Origin',
-						name: 'transcript_origin',
+						displayName: 'Subtitle Origin',
+						name: 'subtitle_origin',
 						type: 'options',
-						description: 'Choose auto-generated or uploader-provided transcripts',
+						description: 'Choose auto-generated or uploader-provided subtitles',
 						options: [
 							{ name: 'Auto Generated', value: 'auto_generated' },
 							{ name: 'Uploader Provided', value: 'uploader_provided' },
 						],
 						default: 'auto_generated',
+					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'string',
+						default: '',
+						description:
+							'Label returned in the response headers; does not affect scraping behavior',
 					},
 				],
 			},
@@ -1725,6 +2228,21 @@ export class ScrapingBee implements INodeType {
 							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
 						}
 					});
+				} else if (resource === 'fastSearchAPI') {
+					endpoint = 'https://app.scrapingbee.com/api/v1/fast_search';
+					requestOptions.method = 'GET';
+					scrapingBeeUrlParams.search = this.getNodeParameter('search', i) as string;
+					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
+					Object.keys(additionalFields).forEach((key) => {
+						const snakeKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+						if (
+							additionalFields[key] !== '' &&
+							additionalFields[key] !== undefined &&
+							additionalFields[key] !== null
+						) {
+							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
+						}
+					});
 				} else if (resource === 'walmartSearchAPI') {
 					endpoint = 'https://app.scrapingbee.com/api/v1/walmart/search';
 					requestOptions.method = 'GET';
@@ -1785,8 +2303,38 @@ export class ScrapingBee implements INodeType {
 							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
 						}
 					});
+				} else if (resource === 'amazonPricingAPI') {
+					endpoint = 'https://app.scrapingbee.com/api/v1/amazon/pricing';
+					requestOptions.method = 'GET';
+					scrapingBeeUrlParams.asin = this.getNodeParameter('asin', i) as string;
+					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
+					Object.keys(additionalFields).forEach((key) => {
+						const snakeKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+						if (
+							additionalFields[key] !== '' &&
+							additionalFields[key] !== undefined &&
+							additionalFields[key] !== null
+						) {
+							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
+						}
+					});
 				} else if (resource === 'chatgptAPI') {
 					endpoint = 'https://app.scrapingbee.com/api/v1/chatgpt';
+					requestOptions.method = 'GET';
+					scrapingBeeUrlParams.prompt = this.getNodeParameter('prompt', i) as string;
+					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
+					Object.keys(additionalFields).forEach((key) => {
+						const snakeKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+						if (
+							additionalFields[key] !== '' &&
+							additionalFields[key] !== undefined &&
+							additionalFields[key] !== null
+						) {
+							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
+						}
+					});
+				} else if (resource === 'geminiAPI') {
+					endpoint = 'https://app.scrapingbee.com/api/v1/gemini';
 					requestOptions.method = 'GET';
 					scrapingBeeUrlParams.prompt = this.getNodeParameter('prompt', i) as string;
 					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
@@ -1830,8 +2378,8 @@ export class ScrapingBee implements INodeType {
 							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
 						}
 					});
-				} else if (resource === 'youtubeTrainabilityAPI') {
-					endpoint = 'https://app.scrapingbee.com/api/v1/youtube/trainability';
+				} else if (resource === 'youtubeSubtitlesAPI') {
+					endpoint = 'https://app.scrapingbee.com/api/v1/youtube/subtitles';
 					requestOptions.method = 'GET';
 					scrapingBeeUrlParams.video_id = this.getNodeParameter('videoId', i) as string;
 					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
@@ -1845,25 +2393,15 @@ export class ScrapingBee implements INodeType {
 							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
 						}
 					});
-				} else if (resource === 'youtubeTranscriptAPI') {
-					endpoint = 'https://app.scrapingbee.com/api/v1/youtube/transcript';
-					requestOptions.method = 'GET';
-					scrapingBeeUrlParams.video_id = this.getNodeParameter('videoId', i) as string;
-					const additionalFields = this.getNodeParameter('additionalFields', i, {}) as any;
-					Object.keys(additionalFields).forEach((key) => {
-						const snakeKey = key.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
-						if (
-							additionalFields[key] !== '' &&
-							additionalFields[key] !== undefined &&
-							additionalFields[key] !== null
-						) {
-							scrapingBeeUrlParams[snakeKey] = additionalFields[key];
-						}
-					});
-				} else {
-					// usage
+				} else if (resource === 'usage') {
 					endpoint = 'https://app.scrapingbee.com/api/v1/usage';
 					requestOptions.method = 'GET';
+				} else {
+					throw new NodeOperationError(
+						this.getNode(),
+						`The resource "${resource}" is not supported. It may have been renamed or removed in this version of the node; please reconfigure the node.`,
+						{ itemIndex: i },
+					);
 				}
 
 				// Assign all collected URL parameters and the final URL to the request options
