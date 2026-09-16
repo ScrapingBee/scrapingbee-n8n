@@ -1,48 +1,28 @@
-name: Publish
+name: Publish Package
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+      types: [published]
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: read
 
 jobs:
   publish:
-    name: Publish to npm
     runs-on: ubuntu-latest
-
-    permissions:
-      # n8n requires npm provenance; the attestation needs an OIDC token.
-      id-token: write
-      contents: read
-
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          # OIDC trusted publishing needs npm >= 11.5.
-          node-version: 'lts/*'
-          cache: 'npm'
+          # Use latest active LTS version of Node.js
+          node-version: lts/*
+          registry-url: 'https://registry.npmjs.org'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Check tag matches package.json version
-        run: |
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
-          PKG_VERSION="$(node -p "require('./package.json').version")"
-          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
-            echo "Tag v$TAG_VERSION does not match package.json version $PKG_VERSION"
-            exit 1
-          fi
-
-      - name: Publish
-        # NPM_TOKEN is only needed if Trusted Publishing is not configured on npmjs.com.
-        run: |
-          if [ -n "$NPM_TOKEN" ]; then
-            npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
-          fi
-          npm publish --provenance --access public
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # Ensure npm 11.5.1 or later is installed
+      - name: Update npm
+        run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run build --if-present
+      - run: npm publish

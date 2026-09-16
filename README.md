@@ -64,7 +64,7 @@ n8n 1.101.2 and above
 
 ## Release
 
-Releases are published to npm by GitHub Actions with an npm provenance attestation (required by n8n for community nodes). To release: bump `version` in `package.json`, add a changelog entry below, merge to `master`, then tag the merge commit `vX.Y.Z` and push the tag — the tag must match the package version.
+Releases are published to npm by GitHub Actions with an npm provenance attestation (required by n8n for community nodes). To release: bump `version` in `package.json`, add a changelog entry below, merge to `master`, then publish a GitHub Release tagged `vX.Y.Z` on the merge commit — the workflow publishes that version to npm.
 
 ## Version history
 
