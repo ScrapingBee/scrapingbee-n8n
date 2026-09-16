@@ -62,8 +62,13 @@ n8n 1.101.2 and above
 * [Data Extraction](https://www.scrapingbee.com/documentation/data-extraction/)
 * [JavaScript Scenario](https://www.scrapingbee.com/documentation/js-scenario/)
 
+## Release
+
+Releases are published to npm by GitHub Actions with an npm provenance attestation (required by n8n for community nodes). To release: bump `version` in `package.json`, add a changelog entry below, merge to `master`, then tag the merge commit `vX.Y.Z` and push the tag — the tag must match the package version.
+
 ## Version history
 
+- 1.0.1: Fixed the codex node identifier (`n8n-nodes-scrapingbee.ScrapingBee`) and its documentation links. Releases are now published via GitHub Actions with npm provenance.
 - 1.0.0: Switched authentication from the deprecated `api_key` query parameter to the `Authorization: Bearer` header (existing credentials keep working). Added Amazon Pricing, Fast Search, and Gemini APIs. Added HTML API Auto-Mode (`mode`, `max_cost`) and new Google Search parameters (`light_request`, `pages`, `date_range`, geotargeting, shopping filters, and new search types). Breaking: renamed YouTube Transcript API to YouTube Subtitles API (new `/youtube/subtitles` endpoint, `subtitle_origin` parameter), and removed the discontinued YouTube Trainability API (the endpoint no longer exists).
 - 0.1.6: Added support for YouTube APIs
 - 0.1.5: Added support for Amazon, Walmart, and ChatGPT APIs, and configured it to be used as a tool for AI Agent

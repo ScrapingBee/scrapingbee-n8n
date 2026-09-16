@@ -1,0 +1,65 @@
+# Publishes n8n-nodes-scrapingbee to npm with a provenance attestation.
+#
+# n8n requires community nodes to be published from GitHub Actions with npm
+# provenance (mandatory since May 2026 for verified nodes).
+#
+# Release process:
+#   1. Bump "version" in package.json and add a README changelog entry, merge to master.
+#   2. git tag vX.Y.Z && git push origin vX.Y.Z
+#   The tag push triggers this workflow. The tag must match package.json.
+#
+# Authentication (one-time setup on npmjs.com, package settings):
+#   Preferred: Publish access -> Trusted Publishers -> Add a publisher -> GitHub Actions
+#              (owner: ScrapingBee, repo: scrapingbee-n8n, workflow: publish.yml).
+#              No secret needed - GitHub's OIDC token is used.
+#   Fallback:  a granular automation token stored as the NPM_TOKEN repo secret.
+
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Required to mint the OIDC token used for the provenance attestation.
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          # OIDC trusted publishing needs npm >= 11.5, bundled with current LTS.
+          node-version: 'lts/*'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check tag matches package.json version
+        run: |
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PKG_VERSION="$(node -p "require('./package.json').version")"
+          if [ "$TAG_VERSION" != "$PKG_VERSION" ]; then
+            echo "Tag v$TAG_VERSION does not match package.json version $PKG_VERSION"
+            exit 1
+          fi
+
+      - name: Publish
+        # prepublishOnly runs the build and the strict prepublish lint first.
+        # With NPM_TOKEN unset, npm authenticates through OIDC trusted publishing.
+        run: |
+          if [ -n "$NPM_TOKEN" ]; then
+            npm config set //registry.npmjs.org/:_authToken "$NPM_TOKEN"
+          fi
+          npm publish --provenance --access public
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
