@@ -1,17 +1,17 @@
 {
-	"node": "n8n-nodes-base.ScrapingBee",
+	"node": "n8n-nodes-scrapingbee.ScrapingBee",
 	"nodeVersion": "1.0",
 	"codexVersion": "1.0",
 	"categories": ["Miscellaneous"],
 	"resources": {
-		"credentialDocumenation": [
+		"credentialDocumentation": [
 			{
-				"url": ""
+				"url": "https://github.com/ScrapingBee/scrapingbee-n8n?tab=readme-ov-file#credentials"
 			}
 		],
 		"primaryDocumentation": [
 			{
-				"url": ""
+				"url": "https://www.scrapingbee.com/documentation/"
 			}
 		]
 	}
