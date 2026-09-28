@@ -10,12 +10,13 @@ import {
 	IHttpRequestOptions,
 } from 'n8n-workflow';
 
+import { CREDENTIAL_TYPE_NAME, NODE_TYPE_NAME } from './typeNames';
+
 export class ScrapingBee implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'ScrapingBee',
-		// eslint-disable-next-line n8n-nodes-base/node-class-description-name-miscased
-		name: 'ScrapingBee',
-		icon: 'file:scrapingbee.svg',
+		name: NODE_TYPE_NAME,
+		icon: { light: 'file:scrapingbee.svg', dark: 'file:scrapingbee.svg' },
 		group: ['transform'],
 		version: 1,
 		usableAsTool: true,
@@ -28,7 +29,7 @@ export class ScrapingBee implements INodeType {
 		outputs: ['main'] as (NodeConnectionType | INodeOutputConfiguration)[],
 		credentials: [
 			{
-				name: 'ScrapingBeeApi',
+				name: CREDENTIAL_TYPE_NAME,
 				required: true,
 			},
 		],
@@ -848,8 +849,10 @@ export class ScrapingBee implements INodeType {
 						type: 'options',
 						description:
 							'Auto-Mode escalates through proxy/rendering tiers until one succeeds and only charges the successful tier. GET only; cannot be combined with Render JS, Premium Proxy, Stealth Proxy, or Transparent Status Code.',
-						options: [{ name: 'Auto', value: 'auto' }],
-						// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-options
+						options: [
+							{ name: 'Default', value: '' },
+							{ name: 'Auto', value: 'auto' },
+						],
 						default: '',
 					},
 					{
@@ -1197,12 +1200,12 @@ export class ScrapingBee implements INodeType {
 						type: 'options',
 						description: 'Sort order for results; only applies to the shopping search type',
 						options: [
+							{ name: 'Default', value: '' },
 							{ name: 'Price High To Low', value: 'price_desc' },
 							{ name: 'Price Low To High', value: 'price_asc' },
 							{ name: 'Relevance', value: 'relevance' },
 							{ name: 'Reviews', value: 'reviews' },
 						],
-						// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-options
 						default: '',
 					},
 					{
@@ -1267,12 +1270,12 @@ export class ScrapingBee implements INodeType {
 						type: 'options',
 						description: 'Delivery speed filter',
 						options: [
-							{ name: 'Today', value: 'today' },
-							{ name: 'Tomorrow', value: 'tomorrow' },
 							{ name: '2 Days', value: '2_days' },
 							{ name: 'Anytime', value: 'anytime' },
+							{ name: 'Default', value: '' },
+							{ name: 'Today', value: 'today' },
+							{ name: 'Tomorrow', value: 'tomorrow' },
 						],
-						// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-options
 						default: '',
 					},
 					// NOT WORKING IN API
@@ -1545,12 +1548,12 @@ export class ScrapingBee implements INodeType {
 						options: [
 							{ name: 'Average Review', value: 'average_review' },
 							{ name: 'Best Sellers', value: 'bestsellers' },
+							{ name: 'Default', value: '' },
 							{ name: 'Featured', value: 'featured' },
 							{ name: 'Most Recent', value: 'most_recent' },
 							{ name: 'Price High To Low', value: 'price_high_to_low' },
 							{ name: 'Price Low To High', value: 'price_low_to_high' },
 						],
-						// eslint-disable-next-line n8n-nodes-base/node-param-default-wrong-for-options
 						default: '',
 					},
 					{
@@ -2410,7 +2413,7 @@ export class ScrapingBee implements INodeType {
 
 				const response = await this.helpers.httpRequestWithAuthentication.call(
 					this,
-					'ScrapingBeeApi',
+					CREDENTIAL_TYPE_NAME,
 					requestOptions,
 				);
 				const contentType = (response.headers['content-type'] || '').split(';')[0];

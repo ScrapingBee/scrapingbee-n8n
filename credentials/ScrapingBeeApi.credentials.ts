@@ -1,9 +1,17 @@
-import { IAuthenticateGeneric, ICredentialType, INodeProperties, ICredentialTestRequest } from 'n8n-workflow';
+import {
+	IAuthenticateGeneric,
+	ICredentialType,
+	INodeProperties,
+	ICredentialTestRequest,
+	Icon,
+} from 'n8n-workflow';
+
+import { CREDENTIAL_TYPE_NAME } from '../nodes/ScrapingBee/typeNames';
 
 export class ScrapingBeeApi implements ICredentialType {
-	// eslint-disable-next-line n8n-nodes-base/cred-class-field-name-uppercase-first-char
-	name = 'ScrapingBeeApi';
+	name = CREDENTIAL_TYPE_NAME;
 	displayName = 'ScrapingBee API';
+	icon: Icon = { light: 'file:scrapingbee.svg', dark: 'file:scrapingbee.svg' };
 	documentationUrl = 'https://www.scrapingbee.com/documentation/';
 	properties: INodeProperties[] = [
 		{

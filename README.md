@@ -68,6 +68,7 @@ Releases are published to npm by GitHub Actions with an npm provenance attestati
 
 ## Version history
 
+- 1.0.2: Added a credential icon and configured the icon for both light and dark themes. Option fields that previously had no matching default (`mode`, Google `sort_by`, Walmart `fulfillment_speed`, Amazon `sort_by`) now offer an explicit "Default" choice; behavior is unchanged.
 - 1.0.1: Fixed the codex node identifier (`n8n-nodes-scrapingbee.ScrapingBee`) and its documentation links. Releases are now published via GitHub Actions with npm provenance.
 - 1.0.0: Switched authentication from the deprecated `api_key` query parameter to the `Authorization: Bearer` header (existing credentials keep working). Added Amazon Pricing, Fast Search, and Gemini APIs. Added HTML API Auto-Mode (`mode`, `max_cost`) and new Google Search parameters (`light_request`, `pages`, `date_range`, geotargeting, shopping filters, and new search types). Breaking: renamed YouTube Transcript API to YouTube Subtitles API (new `/youtube/subtitles` endpoint, `subtitle_origin` parameter), and removed the discontinued YouTube Trainability API (the endpoint no longer exists).
 - 0.1.6: Added support for YouTube APIs
